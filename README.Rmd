@@ -12,3 +12,38 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 library(tidyverse)
 ```
+
+
+### Data  
+
+```{r}
+train_df <- read_csv('data/train.csv', col_types = cols(
+        PassengerId = col_integer(),
+        Survived = col_integer(),
+        Pclass = col_integer(),
+        Name = col_character(),
+        Sex = col_character(),
+        Age = col_double(),
+        SibSp = col_integer(),
+        Parch = col_integer(),
+        Ticket = col_character(),
+        Fare = col_double(),
+        Cabin = col_character(),
+        Embarked = col_character()
+))
+
+submission_df <- read_csv('data/train.csv', col_types = cols(
+        PassengerId = col_integer(),
+        Survived = col_integer(),
+        Pclass = col_integer(),
+        Name = col_character(),
+        Sex = col_character(),
+        Age = col_double(),
+        SibSp = col_integer(),
+        Parch = col_integer(),
+        Ticket = col_character(),
+        Fare = col_double(),
+        Cabin = col_character(),
+        Embarked = col_character()
+))
+```
