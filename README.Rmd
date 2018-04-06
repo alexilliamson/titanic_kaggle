@@ -32,7 +32,7 @@ train_df <- read_csv('data/train.csv', col_types = cols(
         Embarked = col_character()
 ))
 
-submission_df <- read_csv('data/train.csv', col_types = cols(
+submission_df <- read_csv('data/test.csv', col_types = cols(
         PassengerId = col_integer(),
         Survived = col_integer(),
         Pclass = col_integer(),
@@ -47,3 +47,30 @@ submission_df <- read_csv('data/train.csv', col_types = cols(
         Embarked = col_character()
 ))
 ```
+
+### Determine Predictors  
+
+Which fields are present in both datasets?  
+
+```{r}
+combined_data <- submission_df %>% 
+        mutate(IsTrain = FALSE) %>%
+        bind_rows(mutate(train_df, IsTrain = TRUE))
+
+combined_data %>%
+        group_by(IsTrain) %>%
+        summarise_all(~sum(is.na(.x)))
+```
+
+Select the non-missing features that would make sense as predictors
+
+```{r}
+predictors <- combined_data %>%
+        select_if(~sum(is.na(.x)) == 0) %>%
+        select(-PassengerId,-Name,-Ticket, -IsTrain) %>%
+        names()
+
+predictors
+```
+
+
