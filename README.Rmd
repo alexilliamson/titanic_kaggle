@@ -17,7 +17,7 @@ library(tidyverse)
 ### Data  
 
 ```{r}
-train_df <- read_csv('data/train.csv', col_types = cols(
+labeled_df <- read_csv('data/train.csv', col_types = cols(
         PassengerId = col_integer(),
         Survived = col_integer(),
         Pclass = col_integer(),
@@ -55,7 +55,7 @@ Which fields are present in both datasets?
 ```{r}
 combined_data <- submission_df %>% 
         mutate(IsTrain = FALSE) %>%
-        bind_rows(mutate(train_df, IsTrain = TRUE))
+        bind_rows(mutate(labeled_df, IsTrain = TRUE))
 
 combined_data %>%
         group_by(IsTrain) %>%
