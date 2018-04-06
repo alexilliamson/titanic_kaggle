@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+library(caret)
 ```
 
 
@@ -34,7 +35,6 @@ labeled_df <- read_csv('data/train.csv', col_types = cols(
 
 submission_df <- read_csv('data/test.csv', col_types = cols(
         PassengerId = col_integer(),
-        Survived = col_integer(),
         Pclass = col_integer(),
         Name = col_character(),
         Sex = col_character(),
@@ -73,4 +73,15 @@ predictors <- combined_data %>%
 predictors
 ```
 
+### Split training/holdout  
+
+```{r}
+set.seed(100)
+
+train_index <- createDataPartition(labeled_df$Survived, p = 0.8, list = FALSE)
+
+train_df <- labeled_df[train_index,]
+
+holdout_df <- labeled_df[-train_index,]
+```
 
