@@ -30,8 +30,10 @@ labeled_df <- read_csv('data/train.csv', col_types = cols(
         Ticket = col_character(),
         Fare = col_double(),
         Cabin = col_character(),
-        Embarked = col_character()
-))
+        Embarked = col_character())
+        ) %>% 
+        mutate(Survived = factor(Survived, levels = c(0,1), 
+                                         labels = c('no_survive', 'survive') ))
 
 submission_df <- read_csv('data/test.csv', col_types = cols(
         PassengerId = col_integer(),
