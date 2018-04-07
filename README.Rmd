@@ -87,3 +87,29 @@ train_df <- labeled_df[train_index,]
 holdout_df <- labeled_df[-train_index,]
 ```
 
+### xgbTree model  
+
+```{r}
+set.seed(101)
+
+ctrl <- trainControl(method = "repeatedcv",
+                     classProbs = T,
+                     summaryFunction = twoClassSummary,
+                     number = 10, 
+                     repeats = 5,
+                     savePredictions = T)
+
+xgbTree_train <- train(Survived ~ .,
+                       data = train_df[,c('Survived',predictors)],
+                       method = "xgbTree",
+                       trControl = ctrl,
+                       metric = 'ROC'
+)
+```
+
+### Model summary  
+
+```{r}
+confusionMatrix(xgbTree_train)
+```
+
