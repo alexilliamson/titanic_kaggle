@@ -20,29 +20,28 @@ library(caret)
 ```{r}
 labeled_df <- read_csv('data/train.csv', col_types = cols(
         PassengerId = col_integer(),
-        Survived = col_integer(),
-        Pclass = col_integer(),
+        Survived = col_factor(levels = c(0,1)),
+        Pclass = col_factor(levels = NULL),
         Name = col_character(),
-        Sex = col_character(),
+        Sex = col_factor(levels = NULL),
         Age = col_double(),
-        SibSp = col_integer(),
-        Parch = col_integer(),
+        SibSp = col_factor(levels = NULL),
+        Parch = col_factor(levels = NULL),
         Ticket = col_character(),
         Fare = col_double(),
         Cabin = col_character(),
         Embarked = col_character())
-        ) %>% 
-        mutate(Survived = factor(Survived, levels = c(0,1), 
-                                         labels = c('no_survive', 'survive') ))
+) %>%
+        mutate(Survived = fct_recode(Survived, survive = '1', no_survive = '0'))
 
 submission_df <- read_csv('data/test.csv', col_types = cols(
         PassengerId = col_integer(),
-        Pclass = col_integer(),
+        Pclass = col_factor(levels = NULL),
         Name = col_character(),
-        Sex = col_character(),
+        Sex = col_factor(levels = NULL),
         Age = col_double(),
-        SibSp = col_integer(),
-        Parch = col_integer(),
+        SibSp = col_factor(levels = NULL),
+        Parch = col_factor(levels = NULL),
         Ticket = col_character(),
         Fare = col_double(),
         Cabin = col_character(),
