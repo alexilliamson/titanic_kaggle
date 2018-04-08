@@ -163,3 +163,16 @@ holdout_auc %>%
         coord_flip() +
         theme_bw()
 ```
+
+### Submission Predictions  
+
+```{r}
+submission_preds <- predict(xgbTree_train, newdata = submission_df) 
+
+submission_output <- submission_df %>%
+        select(PassengerId) %>%
+        mutate(Survived = if_else(submission_preds == 'survive',1,0))
+
+write.csv(submission_output, 'predictions/submission.csv', row.names = F)
+```
+
