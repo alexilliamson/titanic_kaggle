@@ -115,3 +115,51 @@ xgbTree_train <- train(Survived ~ .,
 confusionMatrix(xgbTree_train)
 ```
 
+### Holdout performance  
+
+```{r}
+holdout_preds <- predict(xgbTree_train, newdata = holdout_df, type = 'prob') %>%
+        add_column(
+                prediction = predict(xgbTree_train, 
+                                     newdata = holdout_df, 
+                                     type = 'raw'))
+
+holdout_roc <- roc(holdout_df$Survived, holdout_preds$survive)
+
+holdout_roc_df <- holdout_roc %$%
+        tibble(tpr = sensitivities, fpr = 1 - specificities)
+```
+
+#### Confusion Matrix  
+
+```{r}
+confusionMatrix(holdout_df$Survived,holdout_preds$prediction)
+```
+
+#### ROC curve  
+
+```{r}
+holdout_roc_df %>%
+        ggplot(aes(fpr,tpr)) +
+        geom_line() +
+        geom_abline(slope = 1, intercept = 0) +
+        labs(title = 'Holdout ROC') +
+        theme_bw()
+```
+
+#### AUC  
+
+```{r}
+holdout_auc <- ci.auc(holdout_roc) %>%
+        as.numeric() %>%
+        tibble(value = .) %>%
+        mutate(description = c('lower','estimate','upper')) %>%
+        spread(description, value)
+
+holdout_auc %>%
+        ggplot(aes('holdout auc', y = estimate) ) +
+        geom_errorbar(aes(ymin = lower, ymax = upper)) +
+        geom_label(aes(label = round(estimate, 3))) + 
+        coord_flip() +
+        theme_bw()
+```
